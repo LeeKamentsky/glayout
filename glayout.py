@@ -54,6 +54,11 @@ def layer_layout_subgraph(g, sg, y0, level_attribute):
     # with index 0 being the source and 1 the destination
     #
     edges = np.array(sg.out_edges())
+    if len(edges) == 0:
+        # Can happen if there is only 1 node
+        for node, data in nodes:
+            g.add_node(node, y = y0)
+        return y0 + 1
     #
     # Map the values in idx to the range from 0 to len(idx)
     #
@@ -330,7 +335,10 @@ if __name__=="__main__":
             result = object_numbers.get(image_number, 1)
             object_numbers[image_number] = result + 1
             return result
-            
+        
+        # bug # 1 test - detached vertex
+        vertex(50, objnum(50))
+        
         cells = [ (1, objnum(1)) for _ in range(4)]
         while len(cells) > 0:
             image_number1, object_number1 = cells.pop(0)
